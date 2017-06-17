@@ -21,7 +21,7 @@ public class LogStringCommand extends Command {
 	 */
 	public LogStringCommand(String logLine, int priority) throws Exception {
 		super(commandByte, priority);
-		if (logLine.length()>250)
+		if (logLine.length()>247)
 			throw new Exception("Log line string length must be less than or equal to 247 characters.");//TODO: Make custom/better exception.
 		byte len = (byte) logLine.length();
 		logLineBytes = appendChecksum(concatenateByteArrays(new byte[]{commandByte, len}, stringToByteArray(logLine)));//TODO:Make this line readable
