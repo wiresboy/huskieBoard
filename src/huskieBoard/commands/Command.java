@@ -4,7 +4,6 @@
 package huskieBoard.commands;
 
 import java.io.ByteArrayOutputStream;
-import java.util.List;
 
 /**
  * @author Brandon John
@@ -28,7 +27,7 @@ public abstract class Command {
 	}
 	
 	/**
-	 * @param command_ Byte value of the command
+	 * @param command Byte value of the command
 	 */
 	public Command(byte command) {
 		this(command, kDefaultPriority);
@@ -45,11 +44,25 @@ public abstract class Command {
 	
 	
 	
-	//TODO: javadoc for these abstract methods
+	/**
+	 * Get the byte array to be sent to the HuskieBoard
+	 * @return the byte array to be sent
+	 */
 	public abstract byte[] getCommandByteArray();
 	
-	public abstract int getExpectedResponseLength(); //note: length of 0 means that validateResponse will not be called.
-	public abstract boolean validateResponse(byte[] response);
+	/**
+	 * Get the expected response length. This will determine how many bytes will be read and then sent to validateResponse
+	 * A length of 0 means that no response is expected, and validateResponse will not be called.
+	 * @return number of bytes
+	 */
+	public abstract int getExpectedResponseLength();
+	
+	/**
+	 * Validate the response to the command that was just sent. 
+	 * @param response
+	 * @return True on success, false on invalid response
+	 */
+	public abstract boolean validateResponse(byte[] response); //TODO: Possibly throw an exception when there is a problem with the response?
 	
 	
 	
@@ -68,6 +81,11 @@ public abstract class Command {
 		return sum;
 	}
 	
+	/**
+	 * Append the checksum to a byte array
+	 * @param bytes
+	 * @return full command
+	 */
 	protected static byte[] appendChecksum(byte[] bytes)
 	{
 		byte sum = sumByteArray(bytes);
