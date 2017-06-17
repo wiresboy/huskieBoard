@@ -13,7 +13,7 @@ public class ConfigureLCDCommand extends Command {
 	private byte[] configureLCDBytes = null;
 	
 	/**
-	 * @param lines How large is the LCD display (options: 2,4)
+	 * @param lines How large is the LCD display (options: 2,4 rows)
 	 * @param priority
 	 * @throws Exception 
 	 */
