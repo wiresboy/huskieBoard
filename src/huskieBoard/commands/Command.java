@@ -3,6 +3,9 @@
  */
 package huskieBoard.commands;
 
+import java.io.ByteArrayOutputStream;
+import java.util.List;
+
 /**
  * @author Brandon John
  * Extend this class for all 1 way (transmit-only) commands to be sent from the RoboRIO to the Huskie Board.
@@ -13,22 +16,22 @@ public abstract class Command {
 	
 	protected int priority;
 	protected byte command;
-	
+	protected static final int kDefaultPriority = 0;
+
 	/**
-	 * @param command_ Byte value of the command
-	 * @param priority_ Higher priorities mean the command will be sent earlier when a prioritizing queue is implemented.
+	 * @param command Byte value of the command
+	 * @param priority Higher priorities mean the command will be sent earlier when a prioritizing queue is implemented.
 	 */
-	public Command(byte command_, int priority_) {
-		command = command_;
-		priority = priority_;
+	public Command(byte command, int priority) {
+		this.command = command;
+		this.priority = priority;
 	}
 	
 	/**
 	 * @param command_ Byte value of the command
 	 */
-	public Command(byte command_) {
-		command = command_;
-		priority = 0;
+	public Command(byte command) {
+		this(command, kDefaultPriority);
 	}
 	
 	/**
@@ -65,6 +68,12 @@ public abstract class Command {
 		return sum;
 	}
 	
+	protected static byte[] appendChecksum(byte[] bytes)
+	{
+		byte sum = sumByteArray(bytes);
+		return concatenateByteArrays(bytes, new byte[]{sum});
+	}
+	
 	/**
 	 * Check the checksum in a byte string. 
 	 * @param bytes
@@ -78,5 +87,28 @@ public abstract class Command {
 		for (int i=0; i<len-1; i++) //Add up sum of all bytes except for the last one, which is the checksum
 			runningSum += bytes[i];
 		return providedSum==runningSum;	
+	}
+	
+	/**
+	 * Convert a string into a byte array
+	 * @param s string
+	 * @return byte array representation of the string
+	 */
+	protected static byte[] stringToByteArray(String s)
+	{
+		return s.getBytes();
+	}
+	
+	/**
+	 * Append byte arrays into a single array
+	 * @param byte arrays
+	 * @return appended byte arrays
+	 */
+	protected static byte[] concatenateByteArrays(byte[]... byteArrays) {
+	    ByteArrayOutputStream os = new ByteArrayOutputStream();
+	    for (byte[] b : byteArrays) {
+	        os.write(b, 0, b.length);
+	    }
+	    return os.toByteArray();
 	}
 }
