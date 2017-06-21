@@ -4,6 +4,8 @@
  */
 package huskieBoard.commands;
 
+import java.util.Arrays;
+
 /**
  * @author Brandon John
  * Display a string on an attached LCD
@@ -72,7 +74,7 @@ public class DisplayLCDCommand extends Command {
 	 */
 	@Override
 	public boolean validateResponse(byte[] response) {
-		if (response.equals(new byte[]{commandByte,commandByte}))
+		if (Arrays.equals(response,new byte[]{commandByte,commandByte}))
 			return true;
 		else
 			return false;

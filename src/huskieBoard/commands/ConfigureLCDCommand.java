@@ -3,6 +3,8 @@
  */
 package huskieBoard.commands;
 
+import java.util.Arrays;
+
 /**
  * @author Brandon John
  * Configure the size of the LCD screen attached to the Huskie Board
@@ -56,7 +58,7 @@ public class ConfigureLCDCommand extends Command {
 	 */
 	@Override
 	public boolean validateResponse(byte[] response) {
-		if (response.equals(new byte[]{commandByte, commandByte}))
+		if (Arrays.equals(response,new byte[]{commandByte, commandByte}))
 			return true;
 		else
 			return false;
