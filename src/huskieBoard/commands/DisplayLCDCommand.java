@@ -19,7 +19,7 @@ public class DisplayLCDCommand extends Command {
 	 * @param priority
 	 */
 	public DisplayLCDCommand(byte[] s, int priority) throws Exception {
-		super(commandByte, priority);
+		super(priority);
 		if (s.length>247)
 			throw new Exception("LCD string length must be less than or equal to 247 characters.");//TODO: Make custom/better exception.
 		byte len = (byte) s.length;

@@ -19,7 +19,7 @@ public abstract class OpenLogCommand extends Command {
 	 * @param priority Priority of this command. 
 	 */
 	public OpenLogCommand(String fileName, int priority) {
-		super(commandByte, priority);
+		super(priority);
 		// TODO: sanity check on file name
 		byte len = (byte) fileName.length();
 		openLogBytes = appendChecksum(concatenateByteArrays(new byte[]{commandByte, len}, stringToByteArray(fileName)));

@@ -18,7 +18,7 @@ public class ConfigureLCDCommand extends Command {
 	 * @throws Exception 
 	 */
 	public ConfigureLCDCommand(int lines, int priority) throws Exception{
-		super(commandByte, priority);
+		super(priority);
 		if (lines == 2)
 			configureLCDBytes = new byte[] {commandByte, 0x02, commandByte+0x02};
 		else if (lines == 4)

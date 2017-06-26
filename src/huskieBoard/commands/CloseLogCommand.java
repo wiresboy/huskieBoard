@@ -20,7 +20,7 @@ public class CloseLogCommand extends Command {
 	 * @param priority
 	 */
 	public CloseLogCommand(int priority) {
-		super(commandByte, priority);
+		super(priority);
 	}
 
 	/**

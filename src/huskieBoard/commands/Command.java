@@ -13,24 +13,22 @@ import java.io.ByteArrayOutputStream;
  */
 public abstract class Command {
 	
-	protected int priority;
-	protected byte command;
+	private int priority;
 	protected static final int kDefaultPriority = 0;
 
 	/**
 	 * @param command Byte value of the command
 	 * @param priority Higher priorities mean the command will be sent earlier when a prioritizing queue is implemented.
 	 */
-	public Command(byte command, int priority) {
-		this.command = command;
+	public Command(int priority) {
 		this.priority = priority;
 	}
 	
 	/**
 	 * @param command Byte value of the command
 	 */
-	public Command(byte command) {
-		this(command, kDefaultPriority);
+	public Command() {
+		this(kDefaultPriority);
 	}
 	
 	/**
@@ -42,6 +40,14 @@ public abstract class Command {
 		return priority;
 	}
 	
+	/**
+	 * Set the priority of this command. Generally will be set by the instantiator method.
+	 * @param priority
+	 */
+	protected void setPriority(int priority)
+	{
+		this.priority = priority;
+	}
 	
 	
 	/**
