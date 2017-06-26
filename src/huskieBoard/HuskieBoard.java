@@ -12,9 +12,10 @@ import huskieBoard.commands.Command;
  * @author Team 3061 Huskie Robotics
  * @version 1.0
  */
-public class HuskieBoard {
+public final class HuskieBoard {
 
 	private SerialPort serialPortRef = null;
+	private static HuskieBoard HuskieBoardInstance;
 	
 	//Serial Port requirements
 	private static final int kSerialPortBaudRate = 230400;
@@ -27,33 +28,44 @@ public class HuskieBoard {
 	private static final SerialPort.WriteBufferMode kSerialPortBufferMode = SerialPort.WriteBufferMode.kFlushOnAccess;
 	
 	/**
-	 * @author Brandon John
-	 * @throws Exception(): Only 1 Huskie Board object can be instantiated at a time as there is only 1 serial port available
-	 * Instantiates a HuskieBoard() object
-	 * Configure the serial port.
-	 * There should be a maximum of 1 instance of this object
+	 * Configures the serial port. There should be a maximum of 
+	 * 1 instance of this object, so we use the Singleton pattern
+	 * to make sure that only one is created. To gain access to 
+	 * the HuskieBoard object, use HuskieBoard.getInstance()
 	 */
-	public HuskieBoard() throws Exception {
-		if (serialPortRef == null)
-		{
+	private HuskieBoard() {
 			serialPortRef = new SerialPort(kSerialPortBaudRate, kSerialPortPort, kSerialPortDataBits, kSerialPortParity, kSerialPortStopBits);
 			serialPortRef.disableTermination();
 			serialPortRef.setTimeout(kSerialPortTimeout);
 			serialPortRef.setFlowControl(kSerialPortFlowControl);
 			serialPortRef.setWriteBufferMode(kSerialPortBufferMode);
-		}
-		else
-			throw new Exception("Only 1 Huskie Board can be instatiated at a time");//TODO: Define custom exceptions
 	}
 	
 	/**
-	 * Flushes, and then closes, the serial port
+	 * Get a reference to the instance of the HuskieBoard. This
+	 * follows the singleton pattern, so that only one HuskieBoard
+	 * object can exist at a time.
+	 * @return HuskieBoard object
+	 */
+	public static HuskieBoard getInstance() {
+		if (HuskieBoardInstance == null) {
+			HuskieBoardInstance = new HuskieBoard();//TODO: This is not thread safe!
+		}
+		return HuskieBoardInstance;
+	}
+	
+	/**
+	 * Flushes, and then closes, the serial port.
+	 * Note: Be careful when using this in a multi-threaded environment, or where 
+	 * multiple references to this object may exist. 
+	 * Only use when absolutely necessary!
 	 */
 	public void close()
 	{
 		serialPortRef.flush();
 		serialPortRef.free();
 		serialPortRef = null;
+		HuskieBoardInstance = null;
 	}
 	
 	/**
