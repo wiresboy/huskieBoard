@@ -4,7 +4,8 @@
  */
 package huskieBoard;
 
-import edu.wpi.first.wpilibj.SerialPort;
+//import edu.wpi.first.wpilibj.SerialPort;
+import huskieBoard.test.SerialPort;
 import huskieBoard.commands.Command;
 
 /**
@@ -34,11 +35,11 @@ public final class HuskieBoard {
 	 * the HuskieBoard object, use HuskieBoard.getInstance()
 	 */
 	private HuskieBoard() {
-			serialPortRef = new SerialPort(kSerialPortBaudRate, kSerialPortPort, kSerialPortDataBits, kSerialPortParity, kSerialPortStopBits);
-			serialPortRef.disableTermination();
-			serialPortRef.setTimeout(kSerialPortTimeout);
-			serialPortRef.setFlowControl(kSerialPortFlowControl);
-			serialPortRef.setWriteBufferMode(kSerialPortBufferMode);
+		serialPortRef = new SerialPort(kSerialPortBaudRate, kSerialPortPort, kSerialPortDataBits, kSerialPortParity, kSerialPortStopBits);
+		serialPortRef.disableTermination();
+		serialPortRef.setTimeout(kSerialPortTimeout);
+		serialPortRef.setFlowControl(kSerialPortFlowControl);
+		serialPortRef.setWriteBufferMode(kSerialPortBufferMode);
 	}
 	
 	/**

@@ -16,7 +16,7 @@ public class SetTimeCommand extends Command {
 	 * @param priority
 	 */
 	public SetTimeCommand(int priority) {
-		super(commandByte, priority);
+		super(priority);
 		//Note: The timestamp is generated on request instead of during instantiation, so that it will be as accurate as possible when it does get written.
 	}
 
