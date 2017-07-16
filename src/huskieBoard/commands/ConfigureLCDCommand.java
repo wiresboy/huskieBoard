@@ -31,7 +31,7 @@ public class ConfigureLCDCommand extends Command {
 
 	/**
 	 * @param lines How large is the LCD display (options: 2,4)
-	 * @throws Exception 
+	 * @throws Exception Invalid number of lines exception 
 	 */
 	public ConfigureLCDCommand(int lines) throws Exception {
 		this(lines, kDefaultPriority);
