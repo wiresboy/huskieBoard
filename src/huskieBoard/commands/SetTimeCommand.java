@@ -86,7 +86,7 @@ Seconds are stored in two-second increments.
 	}
 
 	@Override
-	public boolean handleResponse(HuskieBoard board) {
+	protected boolean handleResponsePrivate(HuskieBoard board) {
 		// No response expected
 		return true;
 	}

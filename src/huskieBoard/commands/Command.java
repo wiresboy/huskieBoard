@@ -18,12 +18,18 @@ public abstract class Command {
 	
 	private int priority;
 	protected static final int kDefaultPriority = 0;
+	private Status status = Status.NOT_INSTANTIATED;
+	
+	public enum Status {
+		SENT_SUCCESS, SENT_FAILED, NOT_SENT, NOT_INSTANTIATED
+	}
 
 	/**
 	 * @param command Byte value of the command
 	 * @param priority Higher priorities mean the command will be sent earlier when a prioritizing queue is implemented.
 	 */
 	public Command(int priority) {
+		this.status = Status.NOT_SENT;
 		this.priority = priority;
 	}
 	
@@ -59,21 +65,26 @@ public abstract class Command {
 	 */
 	public abstract byte[] getCommandByteArray();
 	
-	/**
-	 * Get the expected response length. This will determine how many bytes will be read and then sent to validateResponse
-	 * A length of 0 means that no response is expected, and validateResponse will not be called.
-	 * ***This method is being removed soon.***
-	 * @return number of bytes
-	 */
-	//public abstract int getExpectedResponseLength();
 	
 	/**
-	 * Validate the response to the command that was just sent. This method is being removed soon.
-	 * @param response
-	 * @return True on success, false on invalid response
+	 * getStatus
+	 * Get the current status of this command - (SENT_SUCCESS, SENT_FAIL, NOT_SENT, NOT_INSTANTIATED)
+	 * @return status
 	 */
-	//public abstract boolean validateResponse(byte[] response); //TODO: Possibly throw an exception when there is a problem with the response?
+	public Status getStatus()
+	{
+		return status;
+	}
 	
+	/**
+	 * setStatus
+	 * Set the current status of this command, generally to be set to SENT_SUCCESS or SENT_FAIL
+	 */
+	
+	protected void setStatus(Status s)
+	{
+		status = s;
+	}
 	
 	/**
 	 * Parse, validate, and handle the response from the HuskieBoard.
@@ -83,7 +94,30 @@ public abstract class Command {
 	 * @param board: reference to HuskieBoard for serial port access
 	 * @return True when command was successful, false if the checksum or a timeout failed.
 	 */
-	public abstract boolean handleResponse(HuskieBoard board);
+	public boolean handleResponse(HuskieBoard board)
+	{
+		if (handleResponsePrivate(board))
+		{
+			setStatus(Status.SENT_SUCCESS);
+			return true;
+		}
+		else
+		{
+			setStatus(Status.SENT_FAILED);
+			return false;
+		}
+	}
+	
+	/**
+	 * Parse, validate, and handle the response from the HuskieBoard.
+	 * *This is the part of handleResponse that must be overridden.*
+	 * The HuskieBoard object is passed so that the command may use the getters/setters to
+	 * access the serial port functionality, so that if more complex processing than "read x bytes" 
+	 * is required, it can be handled fully.
+	 * @param board: reference to HuskieBoard for serial port access
+	 * @return True when command was successful, false if the checksum or a timeout failed.
+	 */	
+	protected abstract boolean handleResponsePrivate(HuskieBoard board);
 	
 	
 	//Utils:

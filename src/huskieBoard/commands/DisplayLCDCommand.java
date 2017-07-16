@@ -66,7 +66,7 @@ public class DisplayLCDCommand extends Command {
 	 * Return true on success
 	 */
 	@Override
-	public boolean handleResponse(HuskieBoard board) {
+	protected boolean handleResponsePrivate(HuskieBoard board) {
 		return handleSimpleResponse(board,new byte[]{commandByte, commandByte});
 	}
 

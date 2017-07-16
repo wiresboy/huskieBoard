@@ -7,6 +7,8 @@
  */
 package huskieBoard.commands;
 
+import huskieBoard.HuskieBoard;
+
 /**
  * @author Brandon John
  * Close the currently opened log file
@@ -38,20 +40,10 @@ public class CloseLogCommand extends Command {
 		return new byte[] {commandByte, commandByte};
 	}
 
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#getExpectedResponseLength()
-	 */
 	@Override
-	public int getExpectedResponseLength() {
-		return 0; //No response expected
-	}
-
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#validateResponse(byte[])
-	 */
-	@Override
-	public boolean validateResponse(byte[] response) {
-		return false; //No response expected
+	protected boolean handleResponsePrivate(HuskieBoard board) {
+		// No response expected
+		return true;
 	}
 
 }
