@@ -4,6 +4,9 @@
 package huskieBoard.commands;
 
 import java.io.ByteArrayOutputStream;
+import java.util.Arrays;
+
+import huskieBoard.HuskieBoard;
 
 /**
  * @author Brandon John
@@ -59,17 +62,28 @@ public abstract class Command {
 	/**
 	 * Get the expected response length. This will determine how many bytes will be read and then sent to validateResponse
 	 * A length of 0 means that no response is expected, and validateResponse will not be called.
+	 * ***This method is being removed soon.***
 	 * @return number of bytes
 	 */
-	public abstract int getExpectedResponseLength();
+	//public abstract int getExpectedResponseLength();
 	
 	/**
-	 * Validate the response to the command that was just sent. 
+	 * Validate the response to the command that was just sent. This method is being removed soon.
 	 * @param response
 	 * @return True on success, false on invalid response
 	 */
-	public abstract boolean validateResponse(byte[] response); //TODO: Possibly throw an exception when there is a problem with the response?
+	//public abstract boolean validateResponse(byte[] response); //TODO: Possibly throw an exception when there is a problem with the response?
 	
+	
+	/**
+	 * Parse, validate, and handle the response from the HuskieBoard.
+	 * The HuskieBoard object is passed so that the command may use the getters/setters to
+	 * access the serial port functionality, so that if more complex processing than "read x bytes" 
+	 * is required, it can be handled fully.
+	 * @param board: reference to HuskieBoard for serial port access
+	 * @return True when command was successful, false if the checksum or a timeout failed.
+	 */
+	public abstract boolean handleResponse(HuskieBoard board);
 	
 	
 	//Utils:
@@ -135,4 +149,46 @@ public abstract class Command {
 	    }
 	    return os.toByteArray();
 	}
+	
+	/**
+	 * Handle simple response
+	 * This can be used to handle responses that must return a pre-defined set of characters to be considered a success.
+	 * @param board HuskieBoard reference for accessing serial port
+	 * @param expectedBytes The byte array that is expected to be received.
+	 * @return True on success, false on failure.
+	 */
+	public boolean handleSimpleResponse(HuskieBoard board, byte[] expectedBytes)
+	{
+
+		try {
+			//length of expected response: 2
+			byte[] responseBytes = board.serialRead(expectedBytes.length);
+			if (Arrays.equals(responseBytes,expectedBytes))
+			{
+				return true; //Success!
+			}
+			else
+			{
+				throw new Exception("Response for " + this.getClass().getSimpleName() + " was not valid. \n\t" + 
+									"Expecting: 0x" + bytesToHexString(expectedBytes)+"\n\t" +
+									"Received:  0x" + bytesToHexString(responseBytes));
+			}
+		}
+		catch (Exception e)
+		{
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	private String bytesToHexString(byte[] bytes)
+	{
+		StringBuilder sb = new StringBuilder(); 
+		for(byte b : bytes)
+		{
+			sb.append(String.format("%02x", b&0xff));
+		}
+		return sb.toString();
+	}
+	
 }

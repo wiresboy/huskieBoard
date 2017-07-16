@@ -4,6 +4,8 @@
  */
 package huskieBoard.commands;
 
+import huskieBoard.HuskieBoard;
+
 /**
  * @author BrandonJ
  * Logs a string to the SD card. Requires that a file is already open.
@@ -43,20 +45,11 @@ public class LogStringCommand extends Command {
 		return logLineBytes;
 	}
 
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#getExpectedResponseLength()
-	 */
 	@Override
-	public int getExpectedResponseLength() {
-		return 0; //No response expected
+	public boolean handleResponse(HuskieBoard board) {
+		// No response expected
+		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#validateResponse(byte[])
-	 */
-	@Override
-	public boolean validateResponse(byte[] response) {
-		return false; //No response expected
-	}
 
 }

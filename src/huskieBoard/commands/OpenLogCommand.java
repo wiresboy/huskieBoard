@@ -5,6 +5,8 @@
  */
 package huskieBoard.commands;
 
+import huskieBoard.HuskieBoard;
+
 /**
  * @author Brandon John
  * Open a file on the SD card with the given name.
@@ -39,21 +41,13 @@ public abstract class OpenLogCommand extends Command {
 	public byte[] getCommandByteArray() {
 		return openLogBytes;
 	}
-
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#getExpectedResponseLength()
-	 */
+	
+	
 	@Override
-	public int getExpectedResponseLength() {
-		return 0;//No response expected
+	public boolean handleResponse(HuskieBoard board) {
+		// No response expected
+		return true;
 	}
 
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#validateResponse(byte[])
-	 */
-	@Override
-	public boolean validateResponse(byte[] response) {
-		return false;//No response expected
-	}
 
 }

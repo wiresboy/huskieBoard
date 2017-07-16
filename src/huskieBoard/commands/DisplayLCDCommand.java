@@ -4,7 +4,7 @@
  */
 package huskieBoard.commands;
 
-import java.util.Arrays;
+import huskieBoard.HuskieBoard;
 
 /**
  * @author Brandon John
@@ -62,22 +62,12 @@ public class DisplayLCDCommand extends Command {
 	}
 
 	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#getExpectedResponseLength()
+	 * @see huskieBoard.commands.Command#handleResponse(HuskieBoard)
+	 * Return true on success
 	 */
 	@Override
-	public int getExpectedResponseLength() {
-		return 2;
-	}
-
-	/* (non-Javadoc)
-	 * @see huskieBoard.commands.Command#validateResponse(byte[])
-	 */
-	@Override
-	public boolean validateResponse(byte[] response) {
-		if (Arrays.equals(response,new byte[]{commandByte,commandByte}))
-			return true;
-		else
-			return false;
+	public boolean handleResponse(HuskieBoard board) {
+		return handleSimpleResponse(board,new byte[]{commandByte, commandByte});
 	}
 
 }

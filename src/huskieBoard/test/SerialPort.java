@@ -220,6 +220,9 @@ public class SerialPort {
 	 * <p>Empty the transmit and receive buffers in the device and formatted I/O.
 	 */
 	public void reset() {
+		flush();
+		localPort.closePort();
+		localPort.openPort();
 	}
 	
 	//Not supported anyway

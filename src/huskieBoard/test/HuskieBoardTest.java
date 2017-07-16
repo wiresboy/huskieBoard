@@ -15,8 +15,9 @@ public class HuskieBoardTest {
 
 	public static void main(String[] args) {
 		HuskieBoard board = HuskieBoard.getInstance();
-		
-		testLCD(board, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");
+
+		testLCD(board, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");// fails ~50% of the time
+		testLCD(board, "2");	//Short ones don't seem to ever fail though ?
 
 		System.out.println("Ran successfully??");
 	}
@@ -32,7 +33,8 @@ public class HuskieBoardTest {
 			board.sendCommand(c);
 			System.out.println("Wrote to LCD: \"" + displayString + "\"");
 			return true;
-		} catch (Exception e) { //Won't happen, as this is for 2 lines only.
+		} catch (Exception e) {
+			e.printStackTrace();
 			return false;
 		}
 	}

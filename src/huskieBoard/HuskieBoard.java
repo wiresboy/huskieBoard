@@ -79,21 +79,28 @@ public final class HuskieBoard {
 		byte[] commandByteArray = c.getCommandByteArray();//TODO: commandByteArray sanity check? Length>=2, <=255, etc.
 		serialPortRef.write(commandByteArray, commandByteArray.length);
 		
-		int lenResponse = c.getExpectedResponseLength();
-		if (lenResponse > 0)
-		{
-			byte[] responseBytes = serialPortRef.read(lenResponse);
-			if (c.validateResponse(responseBytes))
-			{
-				return; //Success!
-			}
-			else
-			{
-				throw new Exception("Response was not valid");//TODO: Explain cause of exception? Received vs expected? At least which command it was?
-															  //Possibly just send the exception from the command itself?
-			}
-		}
+		c.handleResponse(HuskieBoardInstance); //TODO: Deal with response success?
+		
 		return;
+	}
+	
+	/**
+	 * Serial port read pass-through
+	 * @param length number of bytes to read
+	 * @return bytes read.
+	 */
+	public byte[] serialRead(int numBytes)
+	{	//TODO: Optionally read only the numBytes that were the most recent bytes, so as to avoid issues where extra bytes had previously been written?
+		return serialPortRef.read(numBytes);
+	}
+	
+	/**
+	 * Serial port read all bytes in buffer pass-through
+	 * @return bytes read
+	 */
+	public byte[] serialReadAll()
+	{
+		return serialPortRef.read(serialPortRef.getBytesReceived());
 	}
 	
 	//TODO:Command with response?
