@@ -87,13 +87,21 @@ public class SerialPort {
 	public SerialPort(int baudRate, SerialPort.Port port, int dataBits, SerialPort.Parity parity, SerialPort.StopBits stopBits)
 	{
 		com.fazecast.jSerialComm.SerialPort [] ports = com.fazecast.jSerialComm.SerialPort.getCommPorts();
-		System.out.println(ports);
+		System.out.println("Ports available:");
+		for (com.fazecast.jSerialComm.SerialPort p : ports)
+		{
+			System.out.println(p.getSystemPortName());
+		}
 		localPort = ports[0];
+		System.out.println("Selected port: "+localPort.getDescriptivePortName());
 		localPort.setBaudRate(baudRate);
 		localPort.setNumDataBits(dataBits);
 		localPort.setParity(parity.value);
 		localPort.setNumStopBits(stopBits.value);
 		localPort.setFlowControl(FlowControl.kNone.value);
+		boolean portOpenSuccess = localPort.openPort();
+		
+		System.out.println("Open port success: " + portOpenSuccess);
 		
 	}
 	
@@ -191,7 +199,7 @@ public class SerialPort {
 	 * @param timeout The number of seconds to to wait for I/O.
 	 */
 	public void setTimeout(double timeout) {
-		localPort.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_NONBLOCKING, (int)timeout, (int)timeout);
+		localPort.setComPortTimeouts(com.fazecast.jSerialComm.SerialPort.TIMEOUT_READ_BLOCKING + com.fazecast.jSerialComm.SerialPort.TIMEOUT_WRITE_BLOCKING, (int)(1000*timeout), (int)(1000*timeout));
 	}
 	
 	/**
@@ -201,6 +209,9 @@ public class SerialPort {
 	 * buffer is full.
 	 */
 	public void flush() {
+		int bytesToRead = localPort.bytesAvailable();
+		byte[] b = new byte[bytesToRead];
+		localPort.readBytes(b, bytesToRead);
 	}
 
 	/**
