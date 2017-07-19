@@ -18,7 +18,6 @@ public class CloseLogCommand extends Command {
 	private static final byte commandByte = 0x04;
 	
 	/**
-	 * @param command
 	 * @param priority
 	 */
 	public CloseLogCommand(int priority) {
@@ -26,10 +25,10 @@ public class CloseLogCommand extends Command {
 	}
 
 	/**
-	 * @param command
+	 * Close the open log file on the HuskieBoard.
 	 */
 	public CloseLogCommand() {
-		super(commandByte);
+		super(kDefaultPriority);
 	}
 
 	/* (non-Javadoc)
