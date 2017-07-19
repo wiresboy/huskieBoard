@@ -11,7 +11,7 @@ import huskieBoard.HuskieBoard;
  * @author Brandon John
  * Open a file on the SD card with the given name.
  */
-public abstract class OpenLogCommand extends Command {
+public class OpenLogCommand extends Command {
 
 	private static final byte commandByte = 0x03;
 	private byte[] openLogBytes = null;
@@ -44,10 +44,9 @@ public abstract class OpenLogCommand extends Command {
 	
 	
 	@Override
-	public boolean handleResponse(HuskieBoard board) {
+	protected boolean handleResponsePrivate(HuskieBoard board) {
 		// No response expected
 		return true;
 	}
-
 
 }

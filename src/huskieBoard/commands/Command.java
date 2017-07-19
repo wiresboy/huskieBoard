@@ -195,7 +195,6 @@ public abstract class Command {
 	{
 
 		try {
-			//length of expected response: 2
 			byte[] responseBytes = board.serialRead(expectedBytes.length);
 			if (Arrays.equals(responseBytes,expectedBytes))
 			{
