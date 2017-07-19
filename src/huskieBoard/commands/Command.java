@@ -214,7 +214,7 @@ public abstract class Command {
 		}
 	}
 	
-	private String bytesToHexString(byte[] bytes)
+	protected String bytesToHexString(byte[] bytes)
 	{
 		StringBuilder sb = new StringBuilder(); 
 		for(byte b : bytes)
@@ -222,6 +222,13 @@ public abstract class Command {
 			sb.append(String.format("%02x", b&0xff));
 		}
 		return sb.toString();
+	}
+	
+	protected void waitForResponseFinished()
+	{
+		while (status != Status.SENT_FAILED && status != Status.SENT_SUCCESS)
+			continue; //TODO: Less resource-intensive/threading-friendly option?
+		
 	}
 	
 }
