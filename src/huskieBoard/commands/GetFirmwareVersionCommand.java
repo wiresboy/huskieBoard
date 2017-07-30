@@ -50,7 +50,7 @@ public class GetFirmwareVersionCommand extends Command {
 
 
 		private int toPositive(byte val) {
-			return (val + 256) % 256;
+			return (int) val & 0xFF;
 		}
 		
 		/**
