@@ -96,15 +96,22 @@ public abstract class Command {
 	 */
 	public boolean handleResponse(HuskieBoard board)
 	{
-		if (handleResponsePrivate(board))
+		try
 		{
-			setStatus(Status.SENT_SUCCESS);
-			return true;
-		}
-		else
+			if (handleResponsePrivate(board))
+			{
+				setStatus(Status.SENT_SUCCESS);
+				return true;
+			}
+			else
+			{
+				setStatus(Status.SENT_FAILED);
+				return false;
+			}
+		} catch (Exception e)
 		{
 			setStatus(Status.SENT_FAILED);
-			return false;
+			throw e;
 		}
 	}
 	
