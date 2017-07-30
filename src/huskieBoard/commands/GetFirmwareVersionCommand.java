@@ -4,8 +4,6 @@
  */
 package huskieBoard.commands;
 
-import java.util.Arrays;
-
 import huskieBoard.HuskieBoard;
 
 
@@ -33,8 +31,26 @@ public class GetFirmwareVersionCommand extends Command {
 			huskieBoardVersionTest  = toPositive(versionResponseBytes[4]);
 		}
 		
+		
+		/**
+		 * Generate a Version object manually - generally for use with .equals(version)
+		 * @param huskieBoardVersionMajor
+		 * @param huskieBoardVersionMinor
+		 * @param huskieBoardVersionFix
+		 * @param huskieBoardVersionTest
+		 */
+		public HuskieBoardVersion(int huskieBoardVersionMajor, int huskieBoardVersionMinor, int huskieBoardVersionFix,
+				int huskieBoardVersionTest) {
+			this.huskieBoardVersionMajor = huskieBoardVersionMajor;
+			this.huskieBoardVersionMinor = huskieBoardVersionMinor;
+			this.huskieBoardVersionFix = huskieBoardVersionFix;
+			this.huskieBoardVersionTest = huskieBoardVersionTest;
+		}
+
+
+
 		private int toPositive(byte val) {
-			return (val + 128) % 256;
+			return (val + 256) % 256;
 		}
 		
 		/**
@@ -70,7 +86,59 @@ public class GetFirmwareVersionCommand extends Command {
 		 */
 		@Override
 		public String toString() {
-			return "" + huskieBoardVersionMajor + ":" + huskieBoardVersionMinor + ":" + huskieBoardVersionFix + ":" + huskieBoardVersionTest;
+			return "" + huskieBoardVersionMajor + "." + huskieBoardVersionMinor + "." + huskieBoardVersionFix + "." + huskieBoardVersionTest;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#hashCode()
+		 */
+		@Override
+		public int hashCode() {
+			final int prime = 31;
+			int result = 1;
+			result = prime * result + getOuterType().hashCode();
+			result = prime * result + huskieBoardVersionFix;
+			result = prime * result + huskieBoardVersionMajor;
+			result = prime * result + huskieBoardVersionMinor;
+			result = prime * result + huskieBoardVersionTest;
+			return result;
+		}
+
+		/* (non-Javadoc)
+		 * @see java.lang.Object#equals(java.lang.Object)
+		 */
+		@Override
+		public boolean equals(Object obj) {
+			if (this == obj) {
+				return true;
+			}
+			if (obj == null) {
+				return false;
+			}
+			if (!(obj instanceof HuskieBoardVersion)) {
+				return false;
+			}
+			HuskieBoardVersion other = (HuskieBoardVersion) obj;
+			if (!getOuterType().equals(other.getOuterType())) {
+				return false;
+			}
+			if (huskieBoardVersionMajor != other.huskieBoardVersionMajor) {
+				return false;
+			}
+			if (huskieBoardVersionMinor != other.huskieBoardVersionMinor) {
+				return false;
+			}
+			if (huskieBoardVersionFix != other.huskieBoardVersionFix) {
+				return false;
+			}
+			if (huskieBoardVersionTest != other.huskieBoardVersionTest) {
+				return false;
+			}
+			return true;
+		}
+
+		private GetFirmwareVersionCommand getOuterType() {
+			return GetFirmwareVersionCommand.this;
 		}
 
 	}
@@ -102,7 +170,7 @@ public class GetFirmwareVersionCommand extends Command {
 			byte[] responseBytes = board.serialRead(6);
 			if ((responseBytes.length == 6) && (responseBytes[0] == commandByte) && (checkChecksum(responseBytes)))
 			{
-				
+				huskieBoardVersion = new HuskieBoardVersion(responseBytes);
 				return true; //Success!
 			}
 			else

@@ -30,14 +30,42 @@ public class HuskieBoardTest {
 			System.out.println("Finished test for len: "+len+". Passes: "+tmp+ " (out of 1000)");
 		}*/
 		
-		testLCD(board, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");// fails ~50% of the time
-		testLCD(board, "2");	//Short ones don't seem to ever fail though ?
+		//testLCD(board, "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ");// fails ~50% of the time
+		//testLCD(board, "2");	//Short ones don't seem to ever fail though ?
 		
 		//testSDCard(board);
+		testGetFWVersion(board);
 		
 		System.out.println("Ran successfully??");
 	}
 	
+	public static boolean testGetFWVersion(HuskieBoard board)
+	{
+		try {
+			GetFirmwareVersionCommand c = new GetFirmwareVersionCommand();
+			board.sendCommand(c);
+			if (c.getStatus() == Command.Status.SENT_SUCCESS)
+			{
+				System.out.println("BoardVersion is: "+c.getVersion());
+				if (c.getVersion().equals(c.new HuskieBoardVersion(1,4,3,0)))
+				{
+					return true;
+				}
+				else
+				{
+					System.err.println("Board version not 1.4.3.0 ");
+				}
+			}
+			else
+			{
+				System.err.println("GetFirmwareVersionCommand not sent successfully.");
+			}
+			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
 	
 	public static boolean testLCD(HuskieBoard board, String displayString)
 	{
