@@ -35,6 +35,8 @@ public class HuskieBoardTest {
 		
 		//testSDCard(board);
 		testGetFWVersion(board);
+		testGetAnalogInput(board);
+		testGetAllAnalogInput(board);
 		
 		System.out.println("Ran successfully??");
 	}
@@ -61,6 +63,69 @@ public class HuskieBoardTest {
 				System.err.println("GetFirmwareVersionCommand not sent successfully.");
 			}
 			return false;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
+	public static boolean testGetAnalogInput(HuskieBoard board)
+	{
+		try {
+			boolean success = true;
+			for (int i = 0; i < 8; i++)
+			{
+				GetAnalogInputCommand c = new GetAnalogInputCommand(i);
+				board.sendCommand(c);
+				if (c.getStatus()!=Command.Status.SENT_SUCCESS)
+				{
+					success = false;
+				}
+				else
+				{
+					double voltage = c.getVoltage();
+					System.out.println("GetAnalogInputSingle - channel "+i+": "+voltage+" volts");
+					if (voltage<0 || voltage > 3.3)
+					{
+						success = false;
+					}
+				}
+			}
+			return success;
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+	public static boolean testGetAllAnalogInput(HuskieBoard board)
+	{
+		try {
+			boolean success = true;
+			GetAllAnalogInputsCommand c = new GetAllAnalogInputsCommand();
+
+			board.sendCommand(c);
+			
+			if (c.getStatus()==Command.Status.SENT_SUCCESS)
+			{
+				for (int i = 0; i < 8; i++)
+				{
+					double voltage = c.getVoltageChannel(i);
+					System.out.println("GetAnalogInputAll - channel "+i+": "+voltage+" volts");
+					if (voltage<0 || voltage > 3.3)
+					{
+						success = false;
+					}
+				}
+			}
+			else
+			{
+				success = false;
+			}
+			
+			return success;
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 			return false;
