@@ -10,6 +10,7 @@ import java.util.Date;
 import huskieBoard.*;
 import huskieBoard.commands.*;
 
+
 /**
  * @author BrandonJ
  * Test a huskieboard connected to a local USB port
@@ -34,11 +35,14 @@ public class HuskieBoardTest {
 		//testLCD(board, "2");	//Short ones don't seem to ever fail though ?
 		
 		//testSDCard(board);
-		testGetFWVersion(board);
-		testGetAnalogInput(board);
-		testGetAllAnalogInput(board);
+		testSetLEDValue(board);
+		//testGetFWVersion(board);
+		//testGetAnalogInput(board);
+		//testGetAllAnalogInput(board);
 		
-		System.out.println("Ran successfully??");
+		System.out.println("Ran successfully?? \nWaiting 10 seconds before closing.");
+		delay(10);
+		System.out.println("Done");
 	}
 	
 	public static boolean testGetFWVersion(HuskieBoard board)
@@ -148,6 +152,54 @@ public class HuskieBoardTest {
 		}
 	}
 	
+	public static boolean testSetLEDValue(HuskieBoard board)
+	{
+		try {
+			Command c = new ConfigureLEDStripCommand(	ConfigureLEDStripCommand.HuskieLEDPin.GPIO_0, 
+														ConfigureLEDStripCommand.HuskieLedMode.WS2812, 
+														20);
+			board.sendCommand(c);
+			System.out.println("Configured LED Strip");
+			
+			
+			c = new SetLEDRangeToValueCommand(255,255,255,0,10);
+			board.sendCommand(c);
+			System.out.println("Set LEDs 0..10 to be white");
+			delay(1);
+			
+			c = new SetLEDRangeToValueCommand(255,0,255,0,10);
+			board.sendCommand(c);
+			System.out.println("Set LEDs 0..10 to be purple");
+			/*delay(1);
+			
+			while(true)//Loop forever for fun :)
+			{
+				for (int x=0; x<255; x++)
+				{
+					board.sendCommand(new SetLEDRangeToValueCommand(x, 255-x, 0, 0, 10));
+					delay(.0125);
+				}
+
+				for (int x=0; x<255; x++)
+				{
+					board.sendCommand(new SetLEDRangeToValueCommand(255-x, 0, x, 0, 10));
+					delay(.0125);
+				}
+
+				for (int x=0; x<255; x++)
+				{
+					board.sendCommand(new SetLEDRangeToValueCommand(0, x, 255-x, 0, 10));
+					delay(.0125);
+				}
+			}*/
+			
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+	
 	public static boolean testSDCard(HuskieBoard board)
 	{
 		try {
@@ -176,4 +228,13 @@ public class HuskieBoardTest {
 		}
 	}
 
+	private static void delay(double seconds)
+	{
+		try{
+			Thread.sleep((int)(seconds*1000));
+		}
+		catch (Exception e)
+		{
+		}
+	}
 }

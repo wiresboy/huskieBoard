@@ -91,8 +91,11 @@ public class SerialPort {
 		for (com.fazecast.jSerialComm.SerialPort p : ports)
 		{
 			System.out.println(p.getSystemPortName());
+			if (!p.getDescriptivePortName().contains("Intel(R) Active Management Technology"))
+			{
+				localPort = p;
+			}
 		}
-		localPort = ports[0];
 		System.out.println("Selected port: "+localPort.getDescriptivePortName());
 		localPort.setBaudRate(baudRate);
 		localPort.setNumDataBits(dataBits);
